@@ -8,25 +8,29 @@
             <el-icon size="28"><Grid /></el-icon>
           </div>
           <div class="logo-text">
-            <span class="logo-title">Project Hub</span>
+            <span class="logo-title">晗笑AI</span>
             <span class="logo-sub">我的项目导航</span>
           </div>
         </div>
         <div class="header-actions">
-          <el-button
+          <!-- <el-button
             class="admin-btn"
             @click="$router.push('/main')"
           >
             <el-icon><Setting /></el-icon>
             管理后台
-          </el-button>
+          </el-button> -->
         </div>
       </div>
     </header>
 
     <!-- Hero 区域 -->
     <section class="hero">
-      <div class="hero-bg"></div>
+      <div class="hero-bg">
+        <div class="hero-bg-img">
+          <img style="width: 200px;position: absolute;left: 25%;bottom: 0;" src="@/assets/images/bg.png" alt="hero-bg">
+        </div>
+      </div>
       <div class="hero-content">
         <h1 class="hero-title">
           我的<span class="gradient-text">项目空间</span>
@@ -106,6 +110,25 @@
     <!-- Footer -->
     <footer class="footer">
       <p>Project Hub · 统一管理你的线上项目</p>
+      <div class="contact-links" style="margin-top: 8px; display: flex; gap: 20px; justify-content: center; align-items: center;">
+        <span style="font-size: 14px; color: #888;">联系我们：</span>
+        <a href="https://v.douyin.com/YT4VEjTyVE0/ 9@3.com :4pm" target="_blank" rel="noopener" title="抖音" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+          <img src="https://www.douyin.com/favicon.ico" alt="抖音" style="width: 22px; height: 22px;">
+          <span style="margin-left: 4px;">抖音</span>
+        </a>
+        <a href="https://b23.tv/k8JX8XO" target="_blank" rel="noopener" title="B站" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+          <img src="https://www.bilibili.com/favicon.ico" alt="B站" style="width: 22px; height: 22px;">
+          <span style="margin-left: 4px;">B站</span>
+        </a>
+        <a href="https://www.xiaohongshu.com/" target="_blank" rel="noopener" title="小红书" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+          <img src="https://xiaohongshu.com/favicon.ico" alt="小红书" style="width: 22px; height: 22px;">
+          <span style="margin-left: 4px;">小红书</span>
+        </a>
+        <a href="https://www.zhihu.com/people/" target="_blank" rel="noopener" title="知乎" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+          <img src="https://static.zhihu.com/heifetz/favicon.ico" alt="知乎" style="width: 22px; height: 22px;">
+          <span style="margin-left: 4px;">知乎</span>
+        </a>
+      </div>
     </footer>
   </div>
 </template>
