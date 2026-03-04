@@ -8,6 +8,12 @@ const routes = [
     meta: { title: '项目导航' }
   },
   {
+    path: '/what-to-eat',
+    name: 'WhatToEat',
+    component: () => import('@/views/WhatToEat.vue'),
+    meta: { title: '晚上吃什么' }
+  },
+  {
     path: '/main',
     component: () => import('@/views/main/Layout.vue'),
     meta: { title: '管理后台' },

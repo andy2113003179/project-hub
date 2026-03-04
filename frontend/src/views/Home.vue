@@ -13,6 +13,13 @@
           </div>
         </div>
         <div class="header-actions">
+          <el-button
+            class="tool-btn"
+            type="primary"
+            @click="$router.push('/what-to-eat')"
+          >
+            🍜 晚上吃什么
+          </el-button>
           <!-- <el-button
             class="admin-btn"
             @click="$router.push('/main')"
@@ -197,14 +204,23 @@ onMounted(() => {
 .logo-title {
   font-size: 18px;
   font-weight: 700;
-  color: #1a1a2e;
   line-height: 1.2;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .logo-sub {
   font-size: 12px;
   color: #999;
   line-height: 1.2;
+}
+
+.tool-btn {
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .admin-btn {
