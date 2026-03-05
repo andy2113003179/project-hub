@@ -661,9 +661,16 @@ const spinWheel = () => {
       requestAnimationFrame(animate)
     } else {
       // 计算结果
-      const normalizedRotation = (currentRotation % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2)
+      // 指针在正上方(12点钟方向,即-90度或-π/2位置)
+      // 需要计算哪个扇形在指针位置
+      const normalizedRotation = ((currentRotation % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2)
       const anglePerSlice = (Math.PI * 2) / wheelFoods.value.length
-      const selectedIndex = Math.floor((Math.PI * 2 - normalizedRotation + anglePerSlice / 2) / anglePerSlice) % wheelFoods.value.length
+      
+      // 指针位置是-π/2(正上方),转盘顺时针旋转
+      // 需要找到哪个扇形的中心线对准指针
+      const pointerAngle = Math.PI * 1.5 // 270度,即正上方
+      const adjustedAngle = (pointerAngle - normalizedRotation + Math.PI * 2) % (Math.PI * 2)
+      const selectedIndex = Math.floor(adjustedAngle / anglePerSlice) % wheelFoods.value.length
       
       wheelResult.value = wheelFoods.value[selectedIndex].name
       isSpinning.value = false

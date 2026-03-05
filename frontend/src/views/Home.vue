@@ -13,13 +13,13 @@
           </div>
         </div>
         <div class="header-actions">
-          <el-button
+          <!-- <el-button
             class="tool-btn"
             type="primary"
             @click="$router.push('/what-to-eat')"
           >
             🍜 晚上吃什么
-          </el-button>
+          </el-button> -->
           <!-- <el-button
             class="admin-btn"
             @click="$router.push('/main')"
