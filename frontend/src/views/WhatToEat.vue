@@ -190,17 +190,35 @@
     <el-dialog
       v-model="showFoodManager"
       title="管理食物列表"
-      width="600px"
+      :width="dialogWidth"
       :close-on-click-modal="false"
     >
       <div class="food-manager">
         <div class="add-food-form">
-          <el-input
-            v-model="newFood.emoji"
-            placeholder="表情 (如: 🍕)"
-            style="width: 80px"
-            maxlength="2"
-          />
+          <el-popover placement="bottom-start" :width="280" trigger="click">
+            <template #reference>
+              <el-input
+                v-model="newFood.emoji"
+                placeholder="选表情"
+                style="width: 90px"
+                maxlength="2"
+                readonly
+                class="emoji-input"
+              />
+            </template>
+            <div class="emoji-picker">
+              <div class="emoji-picker-title">选择表情</div>
+              <div class="emoji-picker-grid">
+                <span
+                  v-for="em in emojiOptions"
+                  :key="em"
+                  class="emoji-option"
+                  :class="{ selected: newFood.emoji === em }"
+                  @click="newFood.emoji = em"
+                >{{ em }}</span>
+              </div>
+            </div>
+          </el-popover>
           <el-input
             v-model="newFood.name"
             placeholder="食物名称"
@@ -233,6 +251,9 @@
           <el-button size="small" @click="loadPresetFoods">
             恢复默认食物
           </el-button>
+          <el-button size="small" @click="clearAllFoods">
+            清空所有食物
+          </el-button>
         </div>
       </div>
     </el-dialog>
@@ -240,9 +261,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { ArrowLeft } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
+
+const windowWidth = ref(window.innerWidth)
+const onResize = () => { windowWidth.value = window.innerWidth }
+const dialogWidth = computed(() => windowWidth.value < 500 ? '92%' : '600px')
 
 // 模式选择
 const mode = ref('wheel')
@@ -515,6 +540,15 @@ const currentChampion = ref(null) // 当前擂主
 const currentChallenger = ref(null) // 当前挑战者
 const battleCount = ref(0) // 已经进行的对决次数
 
+// 表情选择列表
+const emojiOptions = [
+  '🍜', '🍚', '🍲', '🥟', '🥢', '🍗', '🥓', '🦐', '🦀', '🥘',
+  '🍕', '🍔', '🍟', '🌭', '🥙', '🌮', '🌯', '🥪', '🍝', '🥩',
+  '🍖', '🍣', '🍱', '🍛', '🍢', '🍥', '🥗', '🥐', '🥖', '🧇',
+  '🥞', '🍳', '🧆', '🍿', '🥮', '🍡', '🥠', '🐟', '🦞', '🦆',
+  '🐷', '🐑', '🫔', '🥯', '🍤', '🥚', '🧀', '🥝', '🍰', '🍩',
+]
+
 // 食物管理
 const showFoodManager = ref(false)
 const newFood = ref({ emoji: '', name: '' })
@@ -579,7 +613,10 @@ const drawWheel = (rotation = 0) => {
   ctx.rotate(rotation)
 
   const foods = wheelFoods.value
-  if (foods.length === 0) return
+  if (foods.length === 0) {
+    ctx.restore()
+    return
+  }
   
   const anglePerSlice = (Math.PI * 2) / foods.length
 
@@ -775,14 +812,27 @@ const loadPresetFoods = () => {
     resetEliminate()
   })
 }
-
-onMounted(() => {
+// 清空所有食物
+const clearAllFoods = () => {
+  foodList.value = []
+  ElMessage.success('已清空所有食物')
+  
   nextTick(() => {
-    // 初始化转盘食物
     refreshWheelFoods()
-    // 初始化淘汰模式
     resetEliminate()
   })
+}
+
+onMounted(() => {
+  window.addEventListener('resize', onResize)
+  nextTick(() => {
+    refreshWheelFoods()
+    resetEliminate()
+  })
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', onResize)
 })
 </script>
 
@@ -943,11 +993,17 @@ onMounted(() => {
 
 .wheel-container {
   position: relative;
-  width: 500px;
-  height: 500px;
+  width: min(500px, calc(100vw - 48px));
+  aspect-ratio: 1;
   background: white;
   border-radius: 50%;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.wheel-container canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .wheel-pointer {
@@ -1300,32 +1356,151 @@ onMounted(() => {
   border-top: 1px solid #eee;
 }
 
+.emoji-input :deep(.el-input__inner) {
+  cursor: pointer;
+  text-align: center;
+  font-size: 20px;
+}
+
+.emoji-picker-title {
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.emoji-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+}
+
+.emoji-option {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.emoji-option:hover {
+  background: #f0f0ff;
+  transform: scale(1.2);
+}
+
+.emoji-option.selected {
+  background: #667eea;
+  box-shadow: 0 0 0 2px #667eea33;
+}
+
+/* ========== 平板 ========== */
 @media (max-width: 768px) {
-  .wheel-container {
-    width: 350px;
-    height: 350px;
+  .main-content {
+    padding: 24px 16px;
+  }
+
+  .header-inner {
+    padding: 0 16px;
+    height: 60px;
+  }
+
+  .logo-icon {
+    font-size: 28px;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+
+  .logo-title {
+    font-size: 17px;
   }
 
   .mode-selector {
-    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .mode-btn {
+    padding: 12px 20px;
+    font-size: 15px;
+    border-radius: 12px;
+  }
+
+  .mode-config {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .wheel-mode {
+    gap: 20px;
+  }
+
+  .wheel-pointer {
+    font-size: 32px;
+    top: -24px;
+  }
+
+  .wheel-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .spin-btn {
+    padding: 12px 32px;
+    font-size: 16px;
+  }
+
+  .result-display {
+    padding: 20px 24px;
+  }
+
+  .result-food {
+    font-size: 26px;
+  }
+
+  .eliminate-mode {
+    padding: 20px;
+    border-radius: 18px;
   }
 
   .battle-cards {
     flex-direction: column;
-    gap: 24px;
+    gap: 16px;
   }
 
   .battle-card {
     max-width: 100%;
     width: 100%;
+    padding: 36px 24px;
   }
 
   .vs-divider {
     transform: rotate(90deg);
   }
 
+  .vs-text {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+
   .battle-title {
     font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .battle-stats {
+    gap: 20px;
+    margin-bottom: 16px;
+  }
+
+  .battle-stats .stat-value {
+    font-size: 26px;
   }
 
   .food-emoji-large {
@@ -1334,6 +1509,291 @@ onMounted(() => {
 
   .food-name-large {
     font-size: 24px;
+  }
+
+  .final-icon {
+    font-size: 60px;
+  }
+
+  .final-subtitle {
+    font-size: 22px;
+  }
+
+  .final-emoji {
+    font-size: 48px;
+  }
+
+  .final-name {
+    font-size: 36px;
+  }
+
+  .final-result {
+    padding: 40px 16px;
+  }
+
+  .empty-state {
+    padding: 40px 16px;
+  }
+
+  .empty-icon {
+    font-size: 60px;
+  }
+
+  .add-food-form {
+    flex-wrap: wrap;
+  }
+
+  .food-list {
+    max-height: 300px;
+  }
+}
+
+/* ========== 手机 ========== */
+@media (max-width: 480px) {
+  .header-inner {
+    padding: 0 12px;
+    height: 54px;
+  }
+
+  .logo-icon {
+    font-size: 24px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .logo-title {
+    font-size: 15px;
+  }
+
+  .logo-sub {
+    display: none;
+  }
+
+  .back-btn {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+
+  .back-btn .el-icon {
+    margin-right: 2px;
+  }
+
+  .main-content {
+    padding: 16px 10px;
+  }
+
+  .mode-selector {
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .mode-btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    border-width: 2px;
+    border-radius: 10px;
+    gap: 6px;
+  }
+
+  .mode-icon {
+    font-size: 20px;
+  }
+
+  .mode-config {
+    flex-direction: column;
+    padding: 10px;
+    border-radius: 12px;
+    margin-bottom: 14px;
+  }
+
+  .config-label {
+    font-size: 13px;
+  }
+
+  .wheel-mode {
+    gap: 16px;
+  }
+
+  .info-text {
+    font-size: 12px;
+    padding: 6px 14px;
+  }
+
+  .wheel-pointer {
+    font-size: 28px;
+    top: -20px;
+  }
+
+  .wheel-controls {
+    gap: 8px;
+    width: 100%;
+  }
+
+  .wheel-controls .el-button {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+
+  .spin-btn {
+    padding: 10px 8px !important;
+    font-size: 14px !important;
+  }
+
+  .result-display {
+    padding: 16px 20px;
+    border-radius: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .result-icon {
+    font-size: 36px;
+  }
+
+  .result-text {
+    font-size: 15px;
+  }
+
+  .result-food {
+    font-size: 22px;
+  }
+
+  .eliminate-mode {
+    padding: 16px 12px;
+    border-radius: 16px;
+  }
+
+  .eliminate-header {
+    margin-bottom: 20px;
+    gap: 12px;
+  }
+
+  .remaining-count {
+    font-size: 15px;
+  }
+
+  .battle-stats {
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  .battle-stats .stat-label {
+    font-size: 12px;
+  }
+
+  .battle-stats .stat-value {
+    font-size: 22px;
+  }
+
+  .battle-title {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .battle-cards {
+    gap: 12px;
+  }
+
+  .battle-card {
+    padding: 32px 16px;
+    border-radius: 18px;
+  }
+
+  .card-badge {
+    font-size: 12px;
+    padding: 3px 12px;
+    top: 10px;
+  }
+
+  .food-emoji-large {
+    font-size: 52px;
+    margin-bottom: 10px;
+  }
+
+  .food-name-large {
+    font-size: 20px;
+  }
+
+  .choose-hint {
+    font-size: 12px;
+    bottom: 10px;
+  }
+
+  .vs-text {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .final-result {
+    padding: 32px 12px;
+  }
+
+  .final-icon {
+    font-size: 48px;
+  }
+
+  .final-text {
+    font-size: 16px;
+  }
+
+  .final-subtitle {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .final-food {
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .final-emoji {
+    font-size: 40px;
+  }
+
+  .final-name {
+    font-size: 28px;
+  }
+
+  .empty-state {
+    padding: 32px 12px;
+  }
+
+  .empty-icon {
+    font-size: 48px;
+  }
+
+  .empty-text {
+    font-size: 15px;
+  }
+
+  .add-food-form {
+    gap: 8px;
+  }
+
+  .food-item {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .food-item .food-emoji {
+    font-size: 20px;
+  }
+
+  .food-item .food-name {
+    font-size: 14px;
+  }
+
+  .food-list {
+    max-height: 240px;
+  }
+
+  .emoji-picker-grid {
+    grid-template-columns: repeat(7, 1fr);
   }
 }
 </style>

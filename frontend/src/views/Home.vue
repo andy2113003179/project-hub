@@ -127,11 +127,11 @@
           <img src="https://www.bilibili.com/favicon.ico" alt="B站" style="width: 22px; height: 22px;">
           <span style="margin-left: 4px;">B站</span>
         </a>
-        <a href="https://www.xiaohongshu.com/" target="_blank" rel="noopener" title="小红书" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+        <a href="https://xhslink.com/m/4fqJlrJ31FF" target="_blank" rel="noopener" title="小红书" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
           <img src="https://xiaohongshu.com/favicon.ico" alt="小红书" style="width: 22px; height: 22px;">
           <span style="margin-left: 4px;">小红书</span>
         </a>
-        <a href="https://www.zhihu.com/people/" target="_blank" rel="noopener" title="知乎" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
+        <a href="https://www.zhihu.com/people/mxian-sheng-27-10" target="_blank" rel="noopener" title="知乎" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
           <img src="https://static.zhihu.com/heifetz/favicon.ico" alt="知乎" style="width: 22px; height: 22px;">
           <span style="margin-left: 4px;">知乎</span>
         </a>
