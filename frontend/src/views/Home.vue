@@ -14,11 +14,22 @@
         </div>
         <div class="header-actions">
           <!-- <el-button
-            class="tool-btn"
-            type="primary"
+            class="tool-btn eat-btn"
             @click="$router.push('/what-to-eat')"
           >
             🍜 晚上吃什么
+          </el-button> -->
+                    <!-- <el-button
+            class="tool-btn qian-btn"
+            @click="$router.push('/lucky-draw')"
+          >
+            🏮 今日运势签
+          </el-button>
+          <el-button
+            class="tool-btn poster-btn"
+            @click="$router.push('/news-poster')"
+          >
+            📰 报纸海报
           </el-button> -->
           <!-- <el-button
             class="admin-btn"
@@ -219,8 +230,38 @@ onMounted(() => {
 
 .tool-btn {
   border-radius: 8px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
+}
+
+.eat-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  color: white;
+}
+
+.eat-btn:hover {
+  opacity: 0.88;
+}
+
+.qian-btn {
+  background: linear-gradient(135deg, #8b1a1a, #c8a96e);
+  border: none;
+  color: #fff8e8;
+}
+
+.qian-btn:hover {
+  opacity: 0.88;
+}
+
+.poster-btn {
+  background: linear-gradient(135deg, #8b4513, #d2691e);
+  border: none;
+  color: #fff5e8;
+}
+
+.poster-btn:hover {
+  opacity: 0.88;
 }
 
 .admin-btn {

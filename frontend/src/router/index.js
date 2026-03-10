@@ -14,6 +14,18 @@ const routes = [
     meta: { title: '晚上吃什么' }
   },
   {
+    path: '/lucky-draw',
+    name: 'LuckyDraw',
+    component: () => import('@/views/LuckyDraw.vue'),
+    meta: { title: '今日运势签' }
+  },
+  {
+    path: '/news-poster',
+    name: 'NewsPoster',
+    component: () => import('@/views/NewsPoster.vue'),
+    meta: { title: '报纸海报生成器' }
+  },
+  {
     path: '/main',
     component: () => import('@/views/main/Layout.vue'),
     meta: { title: '管理后台' },
